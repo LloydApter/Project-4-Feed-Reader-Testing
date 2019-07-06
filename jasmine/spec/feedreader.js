@@ -9,110 +9,80 @@
  * to ensure they don't run until the DOM is ready.
  */
 $(function() {
-    /* This is our first test suite - a test suite just contains
-    * a related set of tests. This suite is all about the RSS
-    * feeds definitions, the allFeeds variable in our application.
-    */
+    /*  "RSS Feeds" test suite checks the RSS feeds through running tests 
+    * on the allFeeds array, ensuring (1) the array gets populated
+    and (2) that both the name and url values for each feed are defined. */
     describe('RSS Feeds', function() {
-        /* This is our first test - it tests to make sure that the
-         * allFeeds variable has been defined and that it is not
-         * empty. Experiment with this before you get started on
-         * the rest of this project. What happens when you change
-         * allFeeds in app.js to be an empty array and refresh the
-         * page?
-         */
-        /* allFeeds is an aray of checking the length allows us to 
+       
+        /* allFeeds is an array so checking the length allows us to 
          * know if and how many items there are in the array */
         it('are defined', function() {
             expect(allFeeds).toBeDefined();
             expect(allFeeds.length).not.toBe(0);
         });
 
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a URL defined
-         * and that the URL is not empty.
-         */
-        /* Using JS array find together with JS arrow syntax to  
-         * traverse the array "url" values to ensure non are null */
+        /* Using JS Array Every method via JS arrow syntax to  
+         * traverse the array "url" values to ensure all are defined */
         it('all feeds have a URL', function() {
-            expect(allFeeds.find(feed => feed.URL === null)).toBe(undefined);
+            expect(allFeeds.every(url => url)).toBeDefined();
  
          });
 
-        /* TODO: Write a test that loops through each feed
-         * in the allFeeds object and ensures it has a name defined
-         * and that the name is not empty.
-         */
-        /* Using JS array find together with JS arrow syntax to  
-         * traverse the array feed "name" values to ensure non are null */
+        /* Using JS Array Every method via JS arrow syntax to  
+         * traverse the array feed "name" values to ensure all are defined */
         it('all feeds have a name', function() {
-            expect(allFeeds.find(feed => feed.name === null)).toBe(undefined);
+            expect(allFeeds.every(name => name)).toBeDefined();
  
          });
     });
 
 
-    /* TODO: Write a new test suite named "The menu" */
+    /* "The menu" test suite checks the functionality of the top left hand corner
+     * menu icon, unsuring (1) it is hidden by default, (2) it opens when clicked
+     * and (3) it is hidden when clicked again or double clicked */
     describe('The menu', function() {
-        /* Selecting the HTML body tag using JQuery and saving as a variable */
+        /* Selecting the HTML body tag using JQuery and saving as a variable, plus
+        * having a tear down after each spec is run to ensure the menu is in its 
+        * default state before each test is run on the menu */
         var body = $('body');
-        /* TODO: Write a test that ensures the menu element is
-         * hidden by default. You'll have to analyze the HTML and
-         * the CSS to determine how we're performing the
-         * hiding/showing of the menu element.
-         */
+        afterEach(function(){
+            if(body.hasClass('menu-hidden') !== true) {
+                $(".menu-icon-link").click();
+            }
+        }, 100);
+
         /* Checking that the body has class "menu-hidden" as a default */
         it('is hidden by default', function() {
             expect(body.hasClass('menu-hidden')).toBe(true);
          });
 
-         /* TODO: Write a test that ensures the menu changes
-          * visibility when the menu icon is clicked. This test
-          * should have two expectations: does the menu display when
-          * clicked and does it hide when clicked again.
-          */
          /* Checking the side menu visibilty requires using HTMLElement.click()
-          * function to simulate a mouse click on the menu icon.  In the first test
-          * it was necessary to add an afterEach click to return the menu to its
-          * hidden state. In the second test two clicks are required to rehide 
-          * the, i.e. return the menu to its default state. */
-         
-        describe('The menu shows', function() {
-         beforeEach(function() {
+          * function to simulate a mouse click on the menu icon.  */
+        it('is visible when clicked a first time', function() {
             $(".menu-icon-link").click();
-         });
-         afterEach(function() {
-            $(".menu-icon-link").click(); 
-         });
-            it('is visible when clicked a first time', function() {
             expect(body.hasClass('menu-hidden')).toBe(false);
-            });
         });
-        describe('The menu is rehidden', function() {
-         beforeEach(function() {
+    
+        it('is hidden when clicked a second time', function() {
             $(".menu-icon-link").click();
             $(".menu-icon-link").click();
-        });
-            it('is hidden when clicked a second time', function() {
             expect(body.hasClass('menu-hidden')).toBe(true);
-             });
         });
     });
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+    /* "Initial Entries" suite to check that when the loadFeed function is
+     * called and completes its work, at least a single news feed is loaded
+     * into the HTML container.  */
     describe('Initial Entries', function() {
-        /* TODO: Write a test that ensures when the loadFeed
-         * function is called and completes its work, there is at least
-         * a single .entry element within the .feed container.
-         * Remember, loadFeed() is asynchronous so this test will require
-         * the use of Jasmine's beforeEach and asynchronous done() function.
-         */
+
+        /* loadFeed() is asynchronous so this test requires the use of 
+         * Jasmine's beforeEach and asynchronous done() function. */
         beforeEach(function(done) {
             loadFeed(0, done);
         });
     
-        /* Checks if there's content by checking the length of the array
-        *  is at least 1 item long */
+        /* Checks if there's content by checking that the HTML articles
+        *  list is at least 1 item long */
         it('Completes work', function() {
             const feedContainer = $('.feed .entry');
             expect(feedContainer.length >= 1).toBe(true);
@@ -120,26 +90,30 @@ $(function() {
         });
     });
 
-    /* TODO: Write a new test suite named "New Feed Selection" */
+    /* "New Feed Selection" suite ensures that each time the loadFeeds function 
+     * is called it is populated with unique news feed items. */
     describe('New Feed Selection', function() {
+        var oldFeed, newFeed;
         
-        beforeEach(function(done) {
-            loadFeed(0, done);
-        });
+        beforeEach(function(done){
 
-        /* TODO: Write a test that ensures when a new feed is loaded
-         * by the loadFeed function that the content actually changes.
-         * Remember, loadFeed() is asynchronous.
-         */
-        /* Used JQuery Array uniqueSort function to remove any duplicates
-         * from the actual array of news feeds and then checked expecting
-         * the number of feed items to equal the orginal array meaning that
-         * there are no duplicates */
-        it('the two feeds are not the same', function(done){
-            const feedContainer = $('.feed .entry');
-            uniqueFeeds = jQuery.uniqueSort(feedContainer);
-            expect(feedContainer.length === uniqueFeeds.length).toBe(true);
+            loadFeed(0, function(){
             
+                oldFeed = $('.feed').html();
+            
+                loadFeed(1, function() {
+            
+                      newFeed = $('.feed').html();
+
+                       done(); // call done when variables are fed and tests to begin
+                  });
+             });
+            });
+            
+        /* Compared the length of two news feeds variables loaded one after another 
+         * Asynchronously to ensure they are not equal and therefore unique.  */
+        it('the two feeds are not the same', function(done){
+            expect(oldFeed.length === newFeed.length).not.toEqual(true);
             done();
             });
     });
