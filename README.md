@@ -29,11 +29,11 @@ Below you will find a list detailing the Jasmine tests specs completed.
 
 #1. RSS Feeds
 
-It was important to check that the RSS feed array was complete, i.e. the Jasmine specs confirmed that the feeds array is populated and that all feed objects of the array contained both URL and name values.  This was a test completed on the SPA app.js file.
+It was important to check that the RSS feed array was complete, i.e. the Jasmine specs confirmed that the feeds array is populated and that all feed objects of the array contained both URL and name values.  This was a test completed on the SPA app.js file.  JavaScript Array Every method was used to iterate over the array for both name and url values to ensure all values are defined.
 
 #2. Side menu
 
-By default the side menu of the SPA is hidden.  When the menu icon (top left hand corner) is clicked the side menu appears.  When the menu icon is clicked again it is hidden (toggles). This Jasmine test was completed on the index.html via simulating clicks on the menu icon and then testing the expected results, using JavaScript vanilla HTMLElement.click() method.
+By default the side menu of the SPA is hidden.  When the menu icon (top left hand corner) is clicked the side menu appears.  When the menu icon is clicked again it is hidden (toggles). This Jasmine test was completed on the index.html via simulating clicks on the menu icon and then testing the expected results, using JavaScript vanilla HTMLElement.click() method.  All specs where moved into one suite and a beforeEach was added as a tear down before running each spec to check and ensure the menu was in the default state before running each spec.
 
 #3. Async API
 
@@ -47,7 +47,7 @@ The async API uses a combination of:
 The Jasmine test specs needed to confirm that:
 
 1. Firstly, the LoadFeeds function which is called by the Google Feed Reader API and itself calls the JQuery Ajax's API populates the Handlebars configured HTML container with news feeds and 
-2. Secondly, to ensure that all the news feeds that are called and displayed are unique and for this the JQuery jQuery.uniqueSort() proved very useful. 
+2. Secondly, to ensure that all the news feeds that are called and displayed are unique and this was done by uploading the news feed twice asynchronously, saving the separate uploads as variables and then comparing the length of each variable to ensure they are not equal and therefore different and unique.
 
 Jasmine "done" was used for both async function tests to ensure the spec was only called once the beforeEach asynchronous function had been completed.  Jasmines's done does this my taking the word "done" as an async function callback and calling it once the asnc function has completed it's work and then adding the same word "done" to the spec function to call it and use it as a spec callback (in the same manner as the beforeEach async function).  
 
